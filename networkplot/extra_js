@@ -1,0 +1,100 @@
+var optArray = [];
+    for (var i = 0; i < nodes.length - 1; i++) {
+      var dispStr = nodes[i].name + "--" + nodes[i].hif;
+      optArray.push(dispStr);
+    }
+
+    //optArray = optArray.sort();
+
+    optArray = optArray.sort(function(s)
+    {
+        z = s.split("--",2);
+        a = z[0];
+        b = z[1]
+        if(a === b)
+        {
+            var x = a[1].toLowerCase(), y = b[1].toLowerCase();
+
+            return x < y ? -1 : x > y ? 1 : 0;
+        }
+        return a - b;
+    });
+
+    var smartArray = [];
+
+    var mergedArray = optArray.concat(smartArray);
+
+
+    $(function () {
+      $("#search").autocomplete({
+        source: mergedArray
+      });
+    });
+d3.select(".ui-widget button").node().onclick=searchNode;
+//    d3.select(".ui-widget smartSearch").node().onclick=popSearch;
+
+    function popSearch() {
+        alert("On track");
+    }
+
+    function searchNode() {
+      //find the node
+
+      var selectedVal = document.getElementById("search").value;
+      selectedVal = selectedVal.split("--",2)[0];
+
+      if (selectedVal == "none") {
+        node.style("stroke", "white").style("stroke-width", "1");
+      } else {
+        var selected = nodes.filter(function (d, i) {
+          return d.name == selectedVal;
+        })[0];
+        d = selected;
+        node.style("opacity", function (o) {
+          return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+        })
+        var link = svg.selectAll(".link")
+        link.style("opacity", function (o) {
+                return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+            });
+      }
+    }
+    
+    
+    
+    
+    
+    
+    function searchNode() {
+      //find the node
+    
+        var selectedArr = document.getElementById("search").value;
+        selectedArr = selectedArr.split(", ");
+        selectedArr.pop();
+
+        var newSelectedArr = selectedArr.map(function(e) {
+        e = e.split("--",2)[0];
+        return e;
+        });
+
+        var res = []; 
+        for(var i =0; i < newSelectedArr.length; i++) {
+            var tmp = nodes.filter(function (d) {
+              return d.name == newSelectedArr[i];
+            })[0];
+            res.push(tmp);
+        }
+        for(var j = 0; j < res.length; j++){
+            console.log(Object.keys(res[j]));
+            d = res[j];
+        node.style("opacity", function (o) {
+          return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+        })
+        var link = svg.selectAll(".link")
+        link.style("opacity", function (o) {
+                return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+            }); 
+        }
+
+    }
+
